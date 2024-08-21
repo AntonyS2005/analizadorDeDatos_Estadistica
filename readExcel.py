@@ -23,8 +23,15 @@ def leerDatos():
             terFila=True
     datos.sort()
     return datos
+
             
-def calcularF():
-    datos = leerDatos()
-    
-print(leerDatos().item())    
+def calcularX(datos):
+    columnx = list()
+    numeroAnterior = -1
+    for dato in datos:
+        if dato == numeroAnterior: 
+            continue
+        columnx.append(dato) 
+        numeroAnterior = dato 
+    return columnx
+

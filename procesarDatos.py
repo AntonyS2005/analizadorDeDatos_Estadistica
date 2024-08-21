@@ -1,8 +1,8 @@
 from collections import Counter
-
+from readExcel import leerDatos 
 # reemplazar esto para que tome los datos de tu lista 
 # estesolo es prueba
-datos = [4, 5, 6, 5, 6, 7, 5, 8, 7, 6, 7, 8, 6, 5, 4, 6, 8, 9, 7, 6, 10,10,10,11]
+datos = leerDatos()
 
 frecuencias = Counter(datos)
 n = len(datos)
