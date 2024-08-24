@@ -3,7 +3,6 @@ def leerDatos():
     terFila = False
     terColumna = False
     nFila = -1
-    nColumnas = -1
     datos = list()
     x = pd.read_excel("ej.xlsx")
     while  terFila == False:

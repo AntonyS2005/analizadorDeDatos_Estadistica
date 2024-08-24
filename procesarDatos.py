@@ -1,5 +1,6 @@
 from collections import Counter
-from readExcel import leerDatos 
+from readExcel import leerDatos
+
 # reemplazar esto para que tome los datos de tu lista 
 # estesolo es prueba
 datos = leerDatos()
@@ -36,7 +37,7 @@ for valor in valores:
 
 # Esto me inprimira el cuadro estadistico
 print(f"{'x':<5}{'f':<5}{'f%':<7}{'Fa':<5}{'Fa%':<7}{'Fd':<5}{'Fd%':<7}")
-print("-" * 37)
+print("-" * 40)
 for i, valor in enumerate(valores):
     print(f"{valor:<5}{frecuencia_abs[i]:<5}{frecuencia_rel[i]:<7.2f}"
           f"{frecuencia_acum[i]:<5}{frecuencia_acum_rel[i]:<7.2f}"
