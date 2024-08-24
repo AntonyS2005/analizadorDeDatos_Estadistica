@@ -38,7 +38,7 @@ def tablaPorIntervalos():
     fdVar = n
     fdPor = list()
     fPorXi = list()
-    d = list
+    d = list()
     for indice in range (canIntervalos):
         promedio = (li[indice]+ls[indice])/2 
         xi.append(promedio)
@@ -51,12 +51,15 @@ def tablaPorIntervalos():
         faDato += len(fre)
         fa.append(faDato)
         faVar=(faDato*100)/n
+        faVar= round(faVar,2)
         faPor.append(faVar)
         fd.append(fdVar)
-        fdPor.append((fdVar*100)/n)
+        fdPor.append(round(((fdVar*100)/n),2))
+
         fdVar-=freVar
-        fPorXi.append(faVar  * promedio)
-    mediaArit = sum(fPorXi/n)
+        fPorXi.append(round((freVar  * promedio),2))
+    mediaArit = sum(fPorXi)/n
+    mediaArit = round(mediaArit,2)
     fPorAbsD = list()
     fPorDDD = list()
     fPorDD = list()
@@ -64,11 +67,12 @@ def tablaPorIntervalos():
 
     for indice in range(canIntervalos):
         dVar = xi[indice] - mediaArit
+        dVar = round(dVar,2)
         d.append(dVar)
-        fPorAbsD.append(frecuencia[indice]*abs(dVar))
-        fPorDD.append(frecuencia[indice]*dVar**2)
-        fPorDDD.append(frecuencia[indice]*dVar**3)
-        fPorDDDD.append(frecuencia[indice]*dVar**4)
+        fPorAbsD.append(round(frecuencia[indice]*abs(dVar),2))
+        fPorDD.append(round(frecuencia[indice]*dVar**2,2))
+        fPorDDD.append(round(frecuencia[indice]*dVar**3,2))
+        fPorDDDD.append(round(frecuencia[indice]*dVar**4,2))
         
         
     print(f"li {li}")
@@ -76,11 +80,27 @@ def tablaPorIntervalos():
     print(f"xi{xi}")
     print(f"f{frecuencia}")
     print(f"fr {fr}")
-    print(f"")
+    print(f"fa{fa}")
+    print(f"fa%{faPor}")
+    print(f"fd{fd}")
+    print(f"fd%{fdPor}")
+    print(f"F*xi{fPorXi}")
+    print(f"d {d}")
+    print()
+    print(f"f*|d|{fPorAbsD}")
+    print(sum( fPorAbsD))
+    print()
+    print(f"f*d^2{fPorDD}")
+    print(sum(fPorDD))
+    print()
+    print(f"f*d^3{fPorDDD}")
+    print(sum(fPorDDD))
+    print()
+    print(f"f*d^4{fPorDDDD}")
+    print(sum(fPorDDDD))
+    print()
+    print(f"media aritmetica {mediaArit}")
     
                 
                 
 tablaPorIntervalos()
-print()
-print("datos")
-print(leerDatos())
