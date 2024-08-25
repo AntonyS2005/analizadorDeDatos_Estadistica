@@ -3,7 +3,18 @@ from readExcel import leerDatos
 
 # reemplazar esto para que tome los datos de tu lista 
 # estesolo es prueba
-datos = leerDatos()
+# datos = leerDatos()
+
+datos = [ 11, 9,	8,	7,	11,	6,	11,
+11,	11,	8,	6,	9,	7,	10,
+11,	5,	9,	7,	8,	6,	5,
+9,	7,	5,	5,	6,	8,	8,
+8,	9,	11,	8,	8,	8,	10,
+10,	8,	9,	7,	9,	6,	7,
+9,	9,	11,	10,	7,	10,	8,
+11,	10,	5,	5,	5,	6,	10,
+6,	6,	10,	7,	9,	9,	10,
+8,	7,	6,	10,	7,	9,	7]
 
 frecuencias = Counter(datos)
 n = len(datos)
@@ -106,4 +117,3 @@ print(f"{'Coef. Asimetría':<20}: {coef_asimetria:.2f}")
 print(f"{'Rango':<20}: {rango}")
 print(f"{'Valor Mínimo':<20}: {minimo}")
 print(f"{'Valor Máximo':<20}: {maximo}")
-
