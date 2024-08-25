@@ -15,7 +15,8 @@ def tablaPorIntervalos():
     n = len(datos)
     rango = max - min
     
-    ni= 1+3.322*math.log(n,10)
+    ni = 1+3.322*math.log(n,10)
+    ni = round(ni,2)
     i = rango / ni
     i = round(i,0)#rawr
     li = list()
@@ -64,8 +65,13 @@ def tablaPorIntervalos():
     fPorDDD = list()
     fPorDD = list()
     fPorDDDD = list()
-
+    indMaxFre = 0
+    maxFre=0
+    posicionMediana = n / 2
+    serchMediana = True
+    mediana = 0
     for indice in range(canIntervalos):
+        #en esta parte se calcula de d a f*d4
         dVar = xi[indice] - mediaArit
         dVar = round(dVar,2)
         d.append(dVar)
@@ -73,34 +79,30 @@ def tablaPorIntervalos():
         fPorDD.append(round(frecuencia[indice]*dVar**2,2))
         fPorDDD.append(round(frecuencia[indice]*dVar**3,2))
         fPorDDDD.append(round(frecuencia[indice]*dVar**4,2))
-        
-        
-    print(f"li {li}")
-    print(f"ls{ls}")
-    print(f"xi{xi}")
-    print(f"f{frecuencia}")
-    print(f"fr {fr}")
-    print(f"fa{fa}")
-    print(f"fa%{faPor}")
-    print(f"fd{fd}")
-    print(f"fd%{fdPor}")
-    print(f"F*xi{fPorXi}")
-    print(f"d {d}")
-    print()
-    print(f"f*|d|{fPorAbsD}")
-    print(sum( fPorAbsD))
-    print()
-    print(f"f*d^2{fPorDD}")
-    print(sum(fPorDD))
-    print()
-    print(f"f*d^3{fPorDDD}")
-    print(sum(fPorDDD))
-    print()
-    print(f"f*d^4{fPorDDDD}")
-    print(sum(fPorDDDD))
-    print()
-    print(f"media aritmetica {mediaArit}")
-    
-                
-                
+        #en esta parte se calcula la moda
+        if frecuencia[indice] > maxFre:
+            indMaxFre= indice
+            maxFre = frecuencia[indice]
+            #en esta parte se calcula la mediana
+        if posicionMediana <= fa[indice] and  serchMediana :
+            print(fa[indice])
+            mediana = li[indice] + ( ( posicionMediana - fa[indice-1] ) / frecuencia[indice] ) * i
+            mediana = round(mediana , 2)
+            serchMediana = False
+
+    delta1Moda=frecuencia[indMaxFre] - frecuencia[indMaxFre-1]
+    delta2Moda=frecuencia[indMaxFre] - frecuencia[indMaxFre+1]
+    moda = li[indMaxFre]+(delta1Moda/(delta1Moda+delta2Moda)* i)
+    moda = round(moda,2)
+    desviacionMed = sum(fPorAbsD)/n
+    desviacionMed = round(desviacionMed,2)
+    desviacionEst = sum(fPorDD)/n 
+    desviacionEst = math.sqrt(desviacionEst)
+    desviacionEst = round(desviacionEst,2)
+    sk = sum(fPorDDD) / ( n * ( desviacionEst ** 3 ) )
+    sk = round(sk,2)
+    k = sum(fPorDDDD) / ( n * ( desviacionEst ** 4 ) )
+    k = round( k , 2 )
+    print(sk)
+    print(k)
 tablaPorIntervalos()
