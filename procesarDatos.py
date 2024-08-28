@@ -63,12 +63,12 @@ print(f"{'x':<5}{'f':<5}{'f%':<7}{'Fa':<5}{'Fa%':<7}{'Fd':<5}{'Fd%':<7}{'d':<7}"
       f"{'f*|d|':<7}{'f*d':<7}{'f*d^2':<7}{'f*d^3':<7}{'f*d^4':<7}")
 print("-" * 92)
 for i, valor in enumerate(valores):
-     print(f"{valor:<5}{frecuencia_abs[i]:<5}{frecuencia_rel[i]:<7.2f}"
-        f"{frecuencia_acum[i]:<5}{frecuencia_acum_rel[i]:<7.2f}"
-        f"{frecuencia_desc[i]:<5}{frecuencia_desc_rel[i]:<7.2f}"
-        f"{deltas[i]:<7.2f}{frecuencia_abs_delta_abs[i]:<7.2f}"
-        f"{frecuencia_abs_delta[i]:<7.2f}{frecuencia_abs_delta_cuadrado[i]:<7.2f}"
-        f"{frecuencia_abs_delta_cubo[i]:<7.2f}{frecuencia_abs_delta_cuarta[i]:<7.2f}")
+     print(f"{valor:<5}{frecuencia_abs[i]:<7}{frecuencia_rel[i]:<7.2f}"
+        f"{frecuencia_acum[i]:<7}{frecuencia_acum_rel[i]:<7.2f}"
+        f"{frecuencia_desc[i]:<10}{frecuencia_desc_rel[i]:<10.2f}"
+        f"{deltas[i]:<10.2f}{frecuencia_abs_delta_abs[i]:<10.2f}"
+        f"{frecuencia_abs_delta[i]:<10.2f}{frecuencia_abs_delta_cuadrado[i]:<10.2f}"
+        f"{frecuencia_abs_delta_cubo[i]:<10.2f}{frecuencia_abs_delta_cuarta[i]:<10.2f}")
      
         # Calcular los totales
 total_f = sum(frecuencia_abs)
