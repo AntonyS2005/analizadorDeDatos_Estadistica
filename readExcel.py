@@ -1,36 +1,63 @@
 import pandas as pd
-def leerDatos():
+import numpy as np
+
+def esNumero(num):
+    try:
+        # Verificar que el dato no es NaN antes de intentar convertirlo a float
+        if pd.isna(num):
+            return False
+        float(num)  # Asegurarse de que es un número
+        return True
+    except Exception:
+        return False
+
+def leerDatos(ubicacion_del_archivo):
     terFila = False
     terColumna = False
     nFila = -1
     datos = list()
-    x = pd.read_excel("ej.xlsx")
-    while  terFila == False:
+    x = pd.read_excel(ubicacion_del_archivo)
+    maxFilas, maxColumnas = x.shape
+    
+    while not terFila:
         nFila += 1
+        
+        # Verificar que nFila está dentro del rango
+        if nFila >= maxFilas:
+            break
+        
         nColumnas = -1
         terColumna = False
-        while terColumna == False :
+        
+        while not terColumna:
             nColumnas += 1
-            dato = x.iloc[nColumnas,nFila]
-            if str(dato).isnumeric() :
-                datos.append(dato);
-            datoSiguiente = x.iloc[nColumnas+1,nFila]
-            if not str(datoSiguiente).isnumeric():
+            
+            # Verificar que nColumnas está dentro del rango
+            if nColumnas >= maxColumnas:
+                break
+            
+            dato = x.iloc[nFila, nColumnas]
+
+            if esNumero(dato):
+                # Conservar el valor tal cual
+                datos.append(float(dato))
+            
+            # Verificar que nColumnas+1 está dentro del rango antes de acceder
+            if nColumnas + 1 >= maxColumnas:
                 terColumna = True
-        datoSiguiente = x.iloc[nColumnas,nFila+1]
-        if not str(datoSiguiente).isnumeric():
-            terFila=True
+            else:
+                datoSiguiente = x.iloc[nFila, nColumnas + 1]
+                if not esNumero(datoSiguiente):
+                    terColumna = True
+        
+        # Verificar que nFila+1 está dentro del rango antes de acceder
+        if nFila + 1 >= maxFilas:
+            terFila = True
+        else:
+            datoSiguiente = x.iloc[nFila + 1, nColumnas]
+            if not esNumero(datoSiguiente):
+                terFila = True
+
     datos.sort()
     return datos
-
-            
-def calcularX(datos):
-    columnx = list()
-    numeroAnterior = -1
-    for dato in datos:
-        if dato == numeroAnterior: 
-            continue
-        columnx.append(dato) 
-        numeroAnterior = dato 
-    return columnx
 
