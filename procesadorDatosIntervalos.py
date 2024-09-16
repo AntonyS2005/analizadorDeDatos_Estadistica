@@ -179,16 +179,12 @@ def tablaPorIntervalos(datos):
         sk = None
         k = None
         print("Advertencia: La desviación estándar es cero, por lo que no se puede calcular el sesgo y la curtosis.")
-
+    
     tabla = []
     for ji in range(canIntervalos):
         tabla.append([
             li[ji], ls[ji], xi[ji], frecuencia[ji], fr[ji], fa[ji], faPor[ji],
-            fd[ji], fdPor[ji], fPorXi[ji], d[ji], fPorAbsD[ji], fPorDD[ji]
+            fd[ji], fdPor[ji], fPorXi[ji], d[ji], fPorAbsD[ji], fPorDD[ji], fPorDDD[ji], fPorDDDD[ji]
         ])
+    return [tabla, cuartiles,deciles, percentiles]
 
-    for fila in tabla:
-        print(fila)
-
-# Llamada a la función con el argumento correcto
-tablaPorIntervalos(leerDatos("prueba.xlsx"))
