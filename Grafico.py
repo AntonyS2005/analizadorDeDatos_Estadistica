@@ -99,6 +99,8 @@ class Window1(QWidget):
 
         self.file_selector = FileSelector()
 
+       
+        self.file_textfield = QLineEdit()
         file_dialog_panel = QWidget()
         file_dialog_layout = QVBoxLayout()
 
@@ -108,7 +110,6 @@ class Window1(QWidget):
         guardar_button = QPushButton("Guardar")
         guardar_button.clicked.connect(self.guardar_direccion)
 
-        file_dialog_layout.addWidget(self.file_label)
         file_dialog_layout.addWidget(self.file_textfield)
         file_dialog_layout.addWidget(file_dialog_button)
         file_dialog_layout.addWidget(guardar_button)
