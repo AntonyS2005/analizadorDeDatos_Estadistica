@@ -1,12 +1,14 @@
 from datetime import date
 import sys
-from PyQt6.QtWidgets import QScrollArea, QSizePolicy, QTableWidget, QTableWidgetItem, QLineEdit, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFileDialog, QStackedWidget
+from PyQt6.QtWidgets import QComboBox, QScrollArea, QSizePolicy, QTableWidget, QTableWidgetItem, QLineEdit, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFileDialog, QStackedWidget
 from PyQt6.QtCharts import QLineSeries, QChart, QChartView, QBarSeries, QBarSet, QBarCategoryAxis, QValueAxis
 from PyQt6.QtGui import QPainter, QIcon, QPixmap, QGuiApplication
 from PyQt6.QtCore import Qt
 from readExcel import leerDatos
 from procesarDatos import listas
 from procesadorDatosIntervalos import generar_tabla_por_intervalos
+from distriBinomialPoisson import distriBinomial, distriPoison, distriNormal
+from analiCombi import combConRep, combSinRep, perCir, perConRep, perSinRep, perSinRepAll
 
 class FileSelector(QWidget):
     def __init__(self):
@@ -35,7 +37,7 @@ class MenuWindow(QWidget):
 
         layout = QVBoxLayout()
         image = QLabel(self)
-        pixmap = QPixmap("./img/banner1.jpg")
+        pixmap = QPixmap("./img/banner3.jpg")
         image.setPixmap(pixmap)     
         layout.addWidget(image)
 
@@ -80,7 +82,6 @@ class MenuWindow(QWidget):
         window_geometry.moveCenter(center_point)
 
         self.move(window_geometry.topLeft())
-
  
 class Window1(QWidget):
     def __init__(self, previous_window):
@@ -104,12 +105,20 @@ class Window1(QWidget):
         file_dialog_panel = QWidget()
         file_dialog_layout = QVBoxLayout()
 
+        img = QHBoxLayout()
+        image = QLabel(self)
+        pixmap = QPixmap("./img/banner_Open_Dialogo.jpg")
+        image.setPixmap(pixmap)
+        image.setMaximumSize(800,400)
+        img.addWidget(image)
+
         file_dialog_button = QPushButton("Seleccionar Archivo")
         file_dialog_button.clicked.connect(self.open_and_display_file)
 
         guardar_button = QPushButton("Guardar")
         guardar_button.clicked.connect(self.guardar_direccion)
 
+        file_dialog_layout.addWidget(image)
         file_dialog_layout.addWidget(self.file_textfield)
         file_dialog_layout.addWidget(file_dialog_button)
         file_dialog_layout.addWidget(guardar_button)
@@ -231,7 +240,6 @@ class Window1(QWidget):
             self.table_resul.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             self.table_resul.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-            
             self.table_resul.setFixedHeight(self.table_resul.verticalHeader().defaultSectionSize())
 
             for col in range(12):
@@ -271,11 +279,9 @@ class Window1(QWidget):
             "f*Xi","d","f*|d|","f*d^2","f*d^3","f*d^4"
         ])
       
-       
         actualizar_button = QPushButton("Actualizar Tabla")
         actualizar_button.clicked.connect(self.actualizar_intervalo)
-        
-                
+              
         Layout_inter.addWidget(self.table_Inter)
         Layout_inter.addWidget(self.table_resul_inter)
         Layout_inter.addWidget(actualizar_button)
@@ -315,7 +321,6 @@ class Window1(QWidget):
                 self.table_Inter.setItem(i, 13, QTableWidgetItem(str(round(data['fPorDDD'][i], 2))))
                 self.table_Inter.setItem(i, 13, QTableWidgetItem(str(round(data['fPorDDDD'][i], 2))))
 
-                
                 total_frecuencia = sum(data['frecuencia'])
                 total_fr = sum(data['fr'])
                 total_fPorAbsD = sum(data['fPorAbsD'])
@@ -334,8 +339,7 @@ class Window1(QWidget):
 
                 self.table_resul_inter.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
                 self.table_resul_inter.setMaximumSize(800, 70)
-                
-
+            
                 for col in range(7):
                     self.table_resul_inter.setColumnWidth(col, 80)
                                                                     
@@ -356,7 +360,7 @@ class Window1(QWidget):
 
         img = QVBoxLayout()
         image = QLabel(self)
-        pixmap = QPixmap("./img/Banner_resumen.jpg")
+        pixmap = QPixmap("./img/banner_delgado.jpg")
         image.setPixmap(pixmap)
         img.addWidget(image)
 
@@ -439,15 +443,15 @@ class Window1(QWidget):
         
     def crear_Grafico(self):
         rango = 0
-        media = 1200
-        mediana = 800
-        moda = 600
-        varianza = 500
-        desviacion_estandar = 1300
-        curtosis = 900
-        asimetria = 700
-        error_tipico = 400
-        cuenta = 1000
+        media = 0
+        mediana = 0
+        moda = 0
+        varianza = 0
+        desviacion_estandar = 0
+        curtosis = 0
+        asimetria = 0
+        error_tipico = 0
+        cuenta = 0
 
         panel = QWidget()
         layout = QVBoxLayout()
@@ -559,52 +563,6 @@ class Window1(QWidget):
 
         self.move(window_geometry.topLeft())
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Window2(QWidget):
     def __init__(self, previous_window):
         super().__init__()
@@ -615,40 +573,351 @@ class Window2(QWidget):
         self.setGeometry(100, 100, 800, 400)
         self.setWindowIcon(QIcon("./img/logo.png"))
 
-        # Layout principal
         main_layout = QHBoxLayout()
 
         self.center_window()
 
-        # Botones para los paneles de la segunda ventana
         Botones_layout = QVBoxLayout()
         self.buttons = {
-            "Boton_Panel1": QPushButton("Panel 1"),
-            "Boton_Panel2": QPushButton("Panel 2"),
-            "Boton_Panel3": QPushButton("Panel 3"),
-            "Boton_Regresar": QPushButton("Regresar")  # Botón para regresar al menú
+            "Boton_Inicio": QPushButton("Inicio"),
+            "Boton_Panel1": QPushButton("combinaciones"),
+            "Boton_Panel2": QPushButton("Distribucion Normal"),
+            "Boton_Panel3": QPushButton("Distribucion Binomial"),
+            "Boton_Panel4": QPushButton("Distribucion Poisson"),
+            "Boton_Regresar": QPushButton("Regresar")
         }
 
         for button in self.buttons.values():
             Botones_layout.addWidget(button)
 
-        # Crear el QStackedWidget para los paneles de la segunda ventana
         self.stack = QStackedWidget()
-        self.stack.addWidget(QLabel("Panel 1 de la segunda ventana"))
-        self.stack.addWidget(QLabel("Panel 2 de la segunda ventana"))
-        self.stack.addWidget(QLabel("Panel 3 de la segunda ventana"))
+        self.stack.addWidget(QLabel("inicio XD"))
+        self.stack.addWidget(self.combinaciones())
+        self.stack.addWidget(self.normal())
+        self.stack.addWidget(self.binomial())
+        self.stack.addWidget(self.poisson())
 
-        # Conectar los botones para cambiar entre paneles
-        self.buttons["Boton_Panel1"].clicked.connect(lambda: self.change_panel(0))
-        self.buttons["Boton_Panel2"].clicked.connect(lambda: self.change_panel(1))
-        self.buttons["Boton_Panel3"].clicked.connect(lambda: self.change_panel(2))
+        self.buttons["Boton_Inicio"].clicked.connect(lambda: self.change_panel(0))
+        self.buttons["Boton_Panel1"].clicked.connect(lambda: self.change_panel(1))
+        self.buttons["Boton_Panel2"].clicked.connect(lambda: self.change_panel(2))
+        self.buttons["Boton_Panel3"].clicked.connect(lambda: self.change_panel(3))
+        self.buttons["Boton_Panel4"].clicked.connect(lambda: self.change_panel(4))
         self.buttons["Boton_Regresar"].clicked.connect(self.regresar)
 
-        # Agregar los layouts
         main_layout.addLayout(Botones_layout)
         main_layout.addWidget(self.stack)
         self.setLayout(main_layout)
+    
+    def combinaciones(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        labels = QVBoxLayout()
+        text = QVBoxLayout()
+        inputs = QHBoxLayout()
         
+        combo = QComboBox()
+        combo.addItem("Combinaciones sin repetición")
+        combo.addItem("Combinaciones con repetición")
+        combo.addItem("Permutaciones sin repetición")
+        combo.addItem("Permutaciones con repetición")
+        combo.addItem("Permutaciones sin repetición (n!)")
+        combo.addItem("Permutaciones circulares")
+
+        label_n = QLabel("Valor de n:")
+        n_input = QLineEdit()
+        label_r = QLabel("Valor de r:")
+        r_input = QLineEdit()
+
+        boton_calcular = QPushButton("Calcular")
+        
+        label_resultado = QLabel("Resultado: ")
+
+        layout.addWidget(label_resultado)
+        labels.addWidget(label_n)
+        text.addWidget(n_input)
+        labels.addWidget(label_r)
+        text.addWidget(r_input)
+        inputs.addLayout(labels)
+        inputs.addLayout(text)
+        layout.addLayout(inputs)
+        layout.addWidget(combo)
+        layout.addWidget(boton_calcular)
+
+        boton_calcular.clicked.connect(lambda: self.calcular_combinaciones(n_input, r_input, label_resultado, combo))
+
+        panel.setLayout(layout)
+        return panel
+
+    def calcular_combinaciones(self, n_input, r_input, label_resultado, combo):
+        try:
+            # Obtener valores de n y r
+            n = int(n_input.text())
+            r = int(r_input.text())
+
+            # Selección del cálculo según el tipo de combinatoria
+            tipo = combo.currentText()
+            if tipo == "Combinaciones sin repetición":
+                res = combSinRep(n, r)
+            elif tipo == "Combinaciones con repetición":
+                res = combConRep(n, r)
+            elif tipo == "Permutaciones sin repetición":
+                res = perSinRep(n, r)
+            elif tipo == "Permutaciones con repetición":
+                res = perConRep(n, r)
+            elif tipo == "Permutaciones sin repetición (n!)":
+                res = perSinRepAll(n)
+            elif tipo == "Permutaciones circulares":
+                res = perCir(n)
+
+            # Mostrar el resultado
+            label_resultado.setText(f"Resultado: {round(res, 4)}")
+        except ValueError:
+            label_resultado.setText("Por favor, ingresa valores válidos para n y r.")
+
+    def normal(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        
+        layout.addWidget(QLabel("Distribución Normal"))
+
+        layoutH = QHBoxLayout()
+
+        self.resultado_normal = QLabel("")
+        layout.addWidget(self.resultado_normal)
+        
+        label_layout = QVBoxLayout()
+        label_layout.addWidget(QLabel("Valor (x):"))
+        label_layout.addWidget(QLabel("Media (μ):"))
+        label_layout.addWidget(QLabel("Desviación estándar (σ):"))
+        label_layout.addWidget(QLabel("Tipo de distribución:"))
+        
+        textfield_layout = QVBoxLayout()
+        self.x_input_normal = QLineEdit()
+        self.mu_input_normal = QLineEdit()
+        self.sigma_input_normal = QLineEdit()
+        
+        textfield_layout.addWidget(self.x_input_normal)
+        textfield_layout.addWidget(self.mu_input_normal)
+        textfield_layout.addWidget(self.sigma_input_normal)
+
+        self.combo_acumulado_normal = QComboBox()
+        self.combo_acumulado_normal.addItems(["Elija una opción", "Acumulativa", "No acumulativa"])
+        textfield_layout.addWidget(self.combo_acumulado_normal)
+
+        layoutH.addLayout(label_layout)
+        layoutH.addLayout(textfield_layout)
+        
+        boton_calcular_normal = QPushButton("Calcular Normal")
+        boton_calcular_normal.clicked.connect(self.calcular_normal)
+        layout.addLayout(layoutH)
+        layout.addWidget(boton_calcular_normal)
+
+        boton_limpiar_normal = QPushButton("Limpiar")
+        boton_limpiar_normal.clicked.connect(self.limpiar_normal)
+        layout.addWidget(boton_limpiar_normal)
+
+        panel.setLayout(layout)
+        return panel
+
+    def calcular_normal(self):
+        try:
+            x = float(self.x_input_normal.text())
+            mu = float(self.mu_input_normal.text())
+            sigma = float(self.sigma_input_normal.text())
+        except ValueError:
+            self.resultado_normal.setText("Por favor, ingrese valores válidos para x, μ y σ. estupido")
+            return
+
+        acumulado = self.combo_acumulado_normal.currentText() == "Acumulativa"
+
+        if self.combo_acumulado_normal.currentText() == "Elija una opción":
+            self.resultado_normal.setText("Por favor seleccione una opción acumulativa o no acumulativa inbecil, una sola cosa que hacer, puta sin neuronas")
+            return
+
+        try:
+            resultado = distriNormal(x, mu, sigma, acumulado)
+            if acumulado:
+                self.resultado_normal.setText(f"Probabilidad acumulada (CDF): {resultado:.4f}")
+            else:
+                self.resultado_normal.setText(f"Densidad normal (PDF): {resultado:.4f}")
+        except ValueError as e:
+            self.resultado_normal.setText(str(e))
+
+    def limpiar_normal(self):
+        self.x_input_normal.clear()
+        self.mu_input_normal.clear()
+        self.sigma_input_normal.clear()
+        self.combo_acumulado_normal.setCurrentIndex(0)
+        self.resultado_normal.clear()
+
+    def poisson(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layoutH = QHBoxLayout()
+        label_layout = QVBoxLayout()
+        textfiel_layout = QVBoxLayout()
+        combo = QHBoxLayout()
+
+        x = 0
+        media = 0
+        acum = True
+
+        combo_acumulado = QComboBox()
+        combo_acumulado.addItems(["Elija una mamawebo", "Acumulativa", "No acumulativa"])
+        combo.addWidget(QLabel("Tipo de distribución: "))
+        combo.addWidget(combo_acumulado)
+
+        resultado = distriPoison(x, media, acum)
+        resultado = round(resultado, 4)
+        print(f"Resultado Poisson: {resultado}")
+
+        label_resultado = QLabel(f"Resultado Poisson: {resultado}")
+
+        label_x = QLabel("Número de éxitos (x): ")
+        x_input = QLineEdit()
+        label_media = QLabel("Media (λ): ")
+        media_input = QLineEdit()
+
+        label_layout.addWidget(label_x)
+        label_layout.addWidget(label_media)
+
+        textfiel_layout.addWidget(x_input)
+        textfiel_layout.addWidget(media_input)
+
+        layoutH.addLayout(label_layout)
+        layoutH.addLayout(textfiel_layout)
+
+        Botones_layout = QVBoxLayout()
+        boton_actualizar = QPushButton("Actualizar")
+        boton_limpiar = QPushButton("Limpiar")
+
+        Botones_layout.addWidget(boton_actualizar)
+        Botones_layout.addWidget(boton_limpiar)
+
+        boton_actualizar.clicked.connect(lambda: self.actualizar_poisson(x_input, media_input, label_resultado, combo_acumulado))
+        boton_limpiar.clicked.connect(lambda: self.limpiar_poisson(x_input, media_input, label_resultado, combo_acumulado))
+
+        layout.addWidget(label_resultado)
+        layout.addLayout(layoutH)
+        layout.addLayout(combo)
+        layout.addLayout(Botones_layout)
+
+        panel.setLayout(layout)
+
+        return panel
+        
+    def actualizar_poisson(self, x_input, media_input, label_resultado, combo_acumulado):
+        try:
+            x = int(x_input.text())
+            media = float(media_input.text())
+            
+            seleccion = combo_acumulado.currentText()
+
+            if seleccion == "Elija una mamawebo":
+                label_resultado.setText("Selecciona un valor acumulativo o no acumulativo, estupido.")
+                return
+
+            acumulado = seleccion == "Acumulativa"
+
+            if x < 0 or media < 0:
+                raise ValueError("Los valores deben ser positivos")
+
+            resultado = distriPoison(x, media, acumulado)
+            resultado = round(resultado, 4)
+            label_resultado.setText(f"Resultado Poisson: {resultado}")
+        except ValueError as e:
+            label_resultado.setText(f"Error: {str(e)}")
+
+    def limpiar_poisson(self, x_input, media_input, label_resultado, combo_acumulado):
+        x_input.clear()
+        media_input.clear()
+        combo_acumulado.setCurrentIndex(0)
+        label_resultado.setText("")
+        
+    def binomial(self):
+        panel = QWidget()
+        layout = QVBoxLayout()
+        layoutH = QHBoxLayout()
+        combo = QHBoxLayout()
+        label_layout = QVBoxLayout()
+        textfiel_layout = QVBoxLayout()
+
+        n = 0
+        k = 0
+        p = 0
+        acum = True
+
+        combo_acumulado = QComboBox()
+        combo_acumulado.addItems(["Seleccione uno awebonado", "Acumulativa", "No acumulativa"])
+
+        resultado = distriBinomial(k, n, p, acum)
+        resultado = round(resultado, 4)
+        print(f"Resultado Binomial: {resultado}")
+
+        label_resultado = QLabel(f"Resultado Binomial: {resultado}")
+        
+        label_n = QLabel("Número de ensayos (n): ")
+        n_input = QLineEdit()
+        label_k = QLabel("Número de éxitos (K): ")
+        k_input = QLineEdit()
+        label_p = QLabel("Probabilidad de éxito (P): ")
+        p_input = QLineEdit()
+
+        label_layout.addWidget(label_n)
+        label_layout.addWidget(label_k)
+        label_layout.addWidget(label_p)
+        combo.addWidget(QLabel("Tipo de distribución: "))
+        combo.addWidget(combo_acumulado)
+        
+        textfiel_layout.addWidget(n_input)
+        textfiel_layout.addWidget(k_input)
+        textfiel_layout.addWidget(p_input)
+
+        layoutH.addLayout(label_layout)
+        layoutH.addLayout(textfiel_layout)
+
+        Botones_layout = QVBoxLayout()
+        boton_actualizar = QPushButton("Actualizar")
+        boton_limpiar = QPushButton("Limpiar")
+
+        Botones_layout.addWidget(boton_actualizar)
+        Botones_layout.addWidget(boton_limpiar)
+
+        boton_actualizar.clicked.connect(lambda: self.actualizar_binomial(n_input, k_input, p_input, label_resultado, combo_acumulado))
+        boton_limpiar.clicked.connect(lambda: self.limpiar_binomial(n_input, k_input, p_input, label_resultado, combo_acumulado))
+
+        layout.addWidget(label_resultado)
+        layout.addLayout(layoutH)
+        layout.addLayout(combo)
+        layout.addLayout(Botones_layout)
+
+        panel.setLayout(layout)
+
+        return panel
+
+    def actualizar_binomial(self, n_input, k_input, p_input, label_resultado, combo_acumulado):
+        try:
+            n = int(n_input.text())
+            k = int(k_input.text())
+            p = float(p_input.text())
+            acumulado = combo_acumulado.currentText() == "Acumulativa"
+
+            if n < 0 or k < 0 or not (0 <= p <= 1):
+                raise ValueError("Los valores deben ser positivos y 0 <= p <= 1")
+
+            resultado = distriBinomial(k, n, p, acumulado)
+            resultado = round(resultado, 4)
+            label_resultado.setText(f"Resultado Binomial: {resultado}")
+        except ValueError as e:
+            label_resultado.setText(f"Error: {str(e)}")
+
+    def limpiar_binomial(self, n_input, k_input, p_input, label_resultado, combo_acumulado):
+        n_input.clear()
+        k_input.clear()
+        p_input.clear()
+        combo_acumulado.setCurrentIndex(0)
+        label_resultado.setText("")
+   
     def change_panel(self, index):
         self.stack.setCurrentIndex(index)
 
